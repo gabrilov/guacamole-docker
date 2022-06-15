@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  mysql:
+    container_name: mysql_guac
+    image: mysql:8.0
+    restart: always      
+    #ports:
+    #- "3306:3306"
+    volumes:
+    - ./mysql:/var/lib/mysql
+    - /etc/localtime:/etc/localtime:ro
+    environment:
+    - MYSQL_DATABASE=guacamole
+    - MYSQL_ROOT_PASSWORD=mahenor2022
+  guacd:
+    image: guacamole/guacd
+    container_name: guacd
+    restart: unless-stopped
+  guacamole:
+    image: guacamole/guacamole:1.4.0
+    container_name: guacamole
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: guacamole
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mahenor2022
